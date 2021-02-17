@@ -1,4 +1,5 @@
 import React from 'react';
+import './UserInfo.css'
 
 function UserInfo(props) {
   const { address, description, firstName, lastName } = props.user;

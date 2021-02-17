@@ -9,7 +9,7 @@ function TableRow(props) {
   }
 
   return (
-    <tr onClick={handleClick}>
+    <tr className="table-row" onClick={handleClick}>
       <td className="center-align" >{ id }</td>
       <td>{ firstName }</td>
       <td>{ lastName }</td>
