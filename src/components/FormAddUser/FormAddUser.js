@@ -22,6 +22,7 @@ function FormAddUser(props) {
     props.isVisible &&
     <section>
       <form onChange={handleChange} onSubmit={handleSubmit} className="row">
+        <h4>Add user</h4>
         <div className="input-field col s2">
           <input placeholder="Id" name="id" id="id" type="number" className="validate" required />
           <label className="active" htmlFor="id">Id</label>

@@ -4,8 +4,8 @@ import Table from "../Table/Table";
 import api from '../utils/Api';
 import Preloader from "../Preloader/Preloader";
 import UserInfo from "../UserInfo/UserInfo";
-import Pagination from "../Pagination/Pagination";
 import FormAddUser from "../FormAddUser/FormAddUser";
+import FilterForm from "../FilterForm/FilterForm";
 
 function App() {
   const [users, setUsers] = useState([]);
@@ -14,6 +14,7 @@ function App() {
   const [isPreloaderVisible, setIsPreloaderVisible] = useState(false);
   const [isUserInfoOpen, setIsUserInfoOpen] = useState(false);
   const [isFormAddUserVisible, setIsFormAddUserVisible] = useState(false);
+  const [isIncreaseData, setIsIncreaseData] = useState(false);
 
   const handleGetMinData = () => {
     setUsers([])
@@ -22,7 +23,10 @@ function App() {
     setIsPreloaderVisible(true)
 
     api.getMinData()
-      .then(res => setUsers(res))
+      .then(res => {
+        setUsers(res)
+        setUsersToRender(res.slice(0, 50))
+      })
       .finally(() => setIsPreloaderVisible(false))
       .catch((err) => console.log(err))
   }
@@ -34,9 +38,9 @@ function App() {
     setIsPreloaderVisible(true)
 
     api.getMaxData()
-      .then(async res => {
-        await setUsersToRender(res.slice(0, 50))
-        await setUsers(res)
+      .then(res => {
+        setUsers(res)
+        setUsersToRender(res.slice(0, 50))
       })
       .finally(() => setIsPreloaderVisible(false))
       .catch((err) => console.log(err))
@@ -65,6 +69,36 @@ function App() {
     setUserInfo(user)
   }
 
+  const dataSorting = () => {
+    let dataSort
+
+    if (isIncreaseData) {
+      dataSort = users.map(item => { return item }).reverse()
+      setUsers(dataSort)
+      setIsIncreaseData(false)
+      return;
+    }
+
+    dataSort =
+      users.sort((a, b) => {
+        if (a.id > b.id) { return 1 }
+        if (a.id < b.id) { return -1 }
+        return 0
+      }).map(item => { return item })
+
+    setUsers(dataSort)
+    setIsIncreaseData(true)
+  }
+
+  const handleFilterSubmit = (objData) => {
+    const { data, values } = objData;
+    const { id } = values;
+
+    const filteredData = data.filter(item => item.id.toString() === id)
+
+    setUsers(filteredData)
+  }
+
   return (
     <div className="App">
       <div className="container">
@@ -86,13 +120,23 @@ function App() {
           </button>
         </div>
         <FormAddUser isVisible={isFormAddUserVisible} onSubmit={handleAddUser} />
-        { users.length > 50  && <Pagination /> }
+        {/*{ users.length > 10  && <Pagination /> }*/}
         { isUserInfoOpen && <UserInfo user={userInfo}/> }
         { isPreloaderVisible && <Preloader /> }
         { users.length > 0  &&
-        <Table
-          handleRowClick={handleRowClick}
-          data={usersToRender.length > 0 ? usersToRender : users}/>
+          <>
+            <FilterForm
+              onSubmit={handleFilterSubmit}
+              data={usersToRender.length > 0 ? usersToRender : users} />
+            <Table
+              setUsersToRender={setUsersToRender}
+              isIncrease={isIncreaseData}
+              onSorting={dataSorting}
+              handleRowClick={handleRowClick}
+              // data={usersToRender.length > 0 ? usersToRender : users}/>
+              usersToRender={usersToRender}
+              data={users}/>
+          </>
         }
       </div>
     </div>

@@ -11,7 +11,7 @@ function UserInfo(props) {
       <p>Выбран пользователь: <b>{ `${firstName} ${lastName}` }</b></p>
       <div className="row">
         <p>Описание:</p>
-        <textarea className="col s8" value={ description } />
+        <textarea className="col s8" value={ description } readOnly />
       </div>
       <p>Адрес проживания: <b>{ streetAddress }</b></p>
       <p>Город: <b>{ city }</b></p>
