@@ -1,4 +1,4 @@
-import { MAX_DATA_FETCH, MIN_DATA_FETCH } from '../utils/constants';
+import { MAX_DATA_FETCH, MIN_DATA_FETCH } from './constants';
 
 class Api {
   constructor({ minFetch, maxFetch }) {

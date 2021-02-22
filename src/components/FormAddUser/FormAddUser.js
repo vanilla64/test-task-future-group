@@ -1,7 +1,17 @@
 import React, { useState } from 'react';
 
 function FormAddUser(props) {
-  const [values, setValues] = useState({});
+  const [values, setValues] = useState({
+    id: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: ''
+  });
+
+  let isValid =
+    values.id === '' || values.firstName === '' ||
+    values.lastName === '' || values.email === '' || values.phone === ''
 
   const handleChange = (evt) => {
     const { name, value } = evt.target;
@@ -14,8 +24,13 @@ function FormAddUser(props) {
   const handleSubmit = (evt) => {
     evt.preventDefault()
     props.onSubmit(values)
-    // setValues({})
-    // evt.target.reset()
+    setValues({
+      id: '',
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: ''
+    })
   }
 
   return (
@@ -24,27 +39,43 @@ function FormAddUser(props) {
       <form onChange={handleChange} onSubmit={handleSubmit} className="row">
         <h4>Add user</h4>
         <div className="input-field col s2">
-          <input placeholder="Id" name="id" id="id" type="number" className="validate" required />
-          <label className="active" htmlFor="id">Id</label>
+          <input
+            onChange={handleChange}
+            value={values.id ? values.id : ''}
+            name="id" id="id" type="number" className="validate" required />
+          <label htmlFor="id">Id</label>
         </div>
         <div className="input-field col s2">
-          <input placeholder="First name" name="firstName" id="first-name" type="text" className="validate" required />
-          <label className="active" htmlFor="first-name">First Name</label>
+          <input
+            onChange={handleChange}
+            value={values.firstName ? values.firstName : ''}
+            name="firstName" id="first-name" type="text" className="validate" required />
+          <label htmlFor="first-name">First Name</label>
         </div>
         <div className="input-field col s2">
-          <input placeholder="Last name" name="lastName" id="last-name" type="text" className="validate" required />
-          <label className="active" htmlFor="last-name">Last Name</label>
+          <input
+            onChange={handleChange}
+            value={values.lastName ? values.lastName : ''}
+            name="lastName" id="last-name" type="text" className="validate" required />
+          <label htmlFor="last-name">Last Name</label>
         </div>
         <div className="input-field col s3">
-          <input placeholder="email" name="email" id="email" type="email" className="validate" required />
-          <label className="active" htmlFor="email">Email</label>
+          <input
+            onChange={handleChange}
+            value={values.email ? values.email : ''}
+            name="email" id="email" type="email" className="validate" required />
+          <label htmlFor="email">Email</label>
         </div>
         <div className="input-field col s3">
-          <input placeholder="phone" name="phone" id="phone" type="tel" className="validate" required />
-          <label className="active" htmlFor="phone">Phone</label>
+          <input
+            onChange={handleChange}
+            value={values.phone ? values.phone : ''}
+            name="phone" id="phone" type="tel" className="validate" required />
+          <label htmlFor="phone">Phone</label>
         </div>
         <button
           type="submit"
+          disabled={isValid}
           className="col s4 waves-effect waves-light btn green lighten-2">Add</button>
         <button
           type="reset"

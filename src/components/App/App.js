@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 
 import Table from "../Table/Table";
-import api from '../utils/Api';
+import api from '../../utils/Api';
 import Preloader from "../Preloader/Preloader";
 import UserInfo from "../UserInfo/UserInfo";
 import FormAddUser from "../FormAddUser/FormAddUser";
 import FilterForm from "../FilterForm/FilterForm";
+import M from 'materialize-css'
 
 function App() {
   const [users, setUsers] = useState([]);
@@ -16,11 +17,16 @@ function App() {
   const [isFormAddUserVisible, setIsFormAddUserVisible] = useState(false);
   const [isIncreaseData, setIsIncreaseData] = useState(false);
 
-  const handleGetMinData = () => {
+  const resetBeforeFetch = () => {
     setUsers([])
     setUsersToRender([])
     setIsUserInfoOpen(false)
     setIsPreloaderVisible(true)
+    setIsIncreaseData(false)
+  }
+
+  const handleGetMinData = () => {
+    resetBeforeFetch()
 
     api.getMinData()
       .then(res => {
@@ -28,14 +34,11 @@ function App() {
         setUsersToRender(res.slice(0, 50))
       })
       .finally(() => setIsPreloaderVisible(false))
-      .catch((err) => console.log(err))
+      .catch((err) => M.toast({html: err.message}))
   }
 
   const handleGetMaxData = () => {
-    setUsers([])
-    setUsersToRender([])
-    setIsUserInfoOpen(false)
-    setIsPreloaderVisible(true)
+    resetBeforeFetch()
 
     api.getMaxData()
       .then(res => {
@@ -43,14 +46,13 @@ function App() {
         setUsersToRender(res.slice(0, 50))
       })
       .finally(() => setIsPreloaderVisible(false))
-      .catch((err) => console.log(err))
+      .catch((err) => M.toast({html: err.message}))
   }
 
   const handleAddUser = async (formData) => {
-    if (users.length === 0) {
-      setUsersToRender(formData, ...usersToRender)
-    }
     setUsers([formData, ...users])
+    setUsersToRender([formData, ...users])
+    M.toast({ html: 'User added!' })
   }
 
   const openFormAddUser = () => {
@@ -69,43 +71,31 @@ function App() {
     setUserInfo(user)
   }
 
-  const dataSorting = () => {
+  const dataSorting = (data) => {
     let dataSort
 
     if (isIncreaseData) {
-      dataSort = users.map(item => { return item }).reverse()
-      setUsers(dataSort)
+      dataSort = data.map(item => { return item }).reverse()
+      setUsersToRender(dataSort)
       setIsIncreaseData(false)
       return;
     }
 
     dataSort =
-      users.sort((a, b) => {
+      data.sort((a, b) => {
         if (a.id > b.id) { return 1 }
         if (a.id < b.id) { return -1 }
         return 0
       }).map(item => { return item })
 
-    setUsers(dataSort)
+    setUsersToRender(dataSort)
     setIsIncreaseData(true)
-  }
-
-  const handleFilterSubmit = (objData) => {
-    const { data, values } = objData;
-    const { id } = values;
-
-    const filteredData = data.filter(item => item.id.toString() === id)
-
-    setUsers(filteredData)
   }
 
   return (
     <div className="App">
       <div className="container">
         <h1>Test task</h1>
-        <div className="container ">
-
-        </div>
         <div className="row">
           <button
             onClick={handleGetMinData}
@@ -120,22 +110,20 @@ function App() {
           </button>
         </div>
         <FormAddUser isVisible={isFormAddUserVisible} onSubmit={handleAddUser} />
-        {/*{ users.length > 10  && <Pagination /> }*/}
-        { isUserInfoOpen && <UserInfo user={userInfo}/> }
         { isPreloaderVisible && <Preloader /> }
         { users.length > 0  &&
           <>
             <FilterForm
-              onSubmit={handleFilterSubmit}
-              data={usersToRender.length > 0 ? usersToRender : users} />
+              setDataForRender={setUsersToRender}
+              data={users} />
             <Table
               setUsersToRender={setUsersToRender}
               isIncrease={isIncreaseData}
               onSorting={dataSorting}
               handleRowClick={handleRowClick}
-              // data={usersToRender.length > 0 ? usersToRender : users}/>
               usersToRender={usersToRender}
               data={users}/>
+            { isUserInfoOpen && <UserInfo onClose={setIsUserInfoOpen} user={userInfo}/> }
           </>
         }
       </div>

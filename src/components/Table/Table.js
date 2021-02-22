@@ -1,25 +1,25 @@
 import React from 'react';
+import './Table.css'
 import TableRow from "../TableRow/TableRow";
 import Pagination from "../Pagination/Pagination";
 
 function Table(props) {
-  const { data, isIncrease, usersToRender } = props
-  console.log(usersToRender)
+  const { data, isIncrease, usersToRender, onSorting, setUsersToRender } = props
   
   const handleSortId = () => {
-    props.onSorting(data)
+    onSorting(usersToRender)
   }
 
   return (
     <>
-      { usersToRender.length > 49 &&
+      { data.length > 49 &&
       <Pagination
         data={data}
-        setUsersToRender={props.setUsersToRender}
+        setUsersToRender={setUsersToRender}
         pageSize={50}
         portionSize={5} />
       }
-      <table className="striped z-depth-4">
+      <table className="table striped z-depth-4">
         <thead>
         <tr>
           <th onClick={handleSortId} className="center-align" >

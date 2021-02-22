@@ -23,7 +23,7 @@ function Pagination(props) {
     const numberOfItem = parseInt(evt.target.closest('a').textContent)
     setActiveItem(numberOfItem)
 
-    console.log(`a: ${pageSize * numberOfItem - pageSize} b: ${numberOfItem * pageSize}`)
+    // console.log(`a: ${pageSize * numberOfItem - pageSize} b: ${numberOfItem * pageSize}`)
     const arrToRender = data.slice(pageSize * numberOfItem - pageSize, numberOfItem * pageSize)
     setUsersToRender(arrToRender)
   }
