@@ -49,7 +49,7 @@ function App() {
       .catch((err) => M.toast({html: err.message}))
   }
 
-  const handleAddUser = async (formData) => {
+  const handleAddUser = (formData) => {
     setUsers([formData, ...users])
     setUsersToRender([formData, ...users])
     M.toast({ html: 'User added!' })

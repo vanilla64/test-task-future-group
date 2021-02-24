@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { IMaskInput } from 'react-imask';
 
 function FormAddUser(props) {
   const [values, setValues] = useState({
@@ -8,6 +9,8 @@ function FormAddUser(props) {
     email: '',
     phone: ''
   });
+
+  const [activeLabel, setActiveLabel] = useState(false);
 
   let isValid =
     values.id === '' || values.firstName === '' ||
@@ -19,6 +22,18 @@ function FormAddUser(props) {
     setValues((prev) => {
       return { ...prev, [name]: value }
     })
+  }
+
+  const handleFocus = () => {
+    setActiveLabel(true)
+  }
+
+  const handleBlur = (evt) => {
+    const { value } = evt.target
+
+    if (value.length === 0) {
+      setActiveLabel(false)
+    }
   }
 
   const handleSubmit = (evt) => {
@@ -33,45 +48,64 @@ function FormAddUser(props) {
     })
   }
 
+  const handleReset = () => {
+    setValues({
+      id: '',
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: ''
+    })
+  }
+
   return (
     props.isVisible &&
     <section>
-      <form onChange={handleChange} onSubmit={handleSubmit} className="row">
+      <form onChange={handleChange} onSubmit={handleSubmit} onReset={handleReset} className="row">
         <h4>Add user</h4>
         <div className="input-field col s2">
           <input
             onChange={handleChange}
-            value={values.id ? values.id : ''}
+            value={values.id}
             name="id" id="id" type="number" className="validate" required />
           <label htmlFor="id">Id</label>
         </div>
         <div className="input-field col s2">
           <input
             onChange={handleChange}
-            value={values.firstName ? values.firstName : ''}
+            value={values.firstName}
             name="firstName" id="first-name" type="text" className="validate" required />
           <label htmlFor="first-name">First Name</label>
         </div>
         <div className="input-field col s2">
           <input
             onChange={handleChange}
-            value={values.lastName ? values.lastName : ''}
+            value={values.lastName}
             name="lastName" id="last-name" type="text" className="validate" required />
           <label htmlFor="last-name">Last Name</label>
         </div>
         <div className="input-field col s3">
           <input
             onChange={handleChange}
-            value={values.email ? values.email : ''}
+            value={values.email}
             name="email" id="email" type="email" className="validate" required />
           <label htmlFor="email">Email</label>
         </div>
         <div className="input-field col s3">
-          <input
-            onChange={handleChange}
-            value={values.phone ? values.phone : ''}
-            name="phone" id="phone" type="tel" className="validate" required />
-          <label htmlFor="phone">Phone</label>
+          <IMaskInput
+            id="phone"
+            // type="tel"
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            mask={'(000)000-0000'}
+            radix="."
+            value={values.phone}
+            unmask={true}
+            onAccept={(value, mask) => {
+              setValues(prev => { return { ...prev, phone: mask._value } })
+            }}
+          />
+          <label className={activeLabel ? 'active' : ''} htmlFor="phone">Phone</label>
         </div>
         <button
           type="submit"
