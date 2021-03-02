@@ -29,7 +29,14 @@ function FilterForm(props) {
     let filteredData = []
 
     keys.forEach(key => {
-      let arr = data.filter(item => item[key].toString() === values[key])
+      // let arr = data.filter(item => item[key].toString().toLowerCase() === values[key].toLowerCase())
+      let arr =
+        data.filter(
+          item => item[key].toString().toLowerCase().includes(values[key].toLowerCase()) && item[key] !== ''
+        )
+
+      console.log(arr)
+
       arr.forEach(i => filteredData.push(i))
     })
 
