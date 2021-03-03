@@ -26,9 +26,9 @@
 ## Clone & Run
 
 ### Clone repo
-`git clone https://github.com/vanilla64/test-task-future-group.git`
-`cd test-task-future-group`
-`npm install`
+###### `git clone https://github.com/vanilla64/test-task-future-group.git`
+###### `cd test-task-future-group`
+###### `npm install`
 ##### Сборка для деплоя
 `npm build`
 ##### Сборка для разработки
@@ -38,4 +38,3 @@
 `docker pull vanillaen/test-task-future-group`
 
 ##### Сергей Машин [VK](https://vk.com/vanilla64)
-
