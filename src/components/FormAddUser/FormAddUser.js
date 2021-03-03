@@ -100,9 +100,9 @@ function FormAddUser(props) {
             mask={'(000)000-0000'}
             radix="."
             value={values.phone}
-            unmask={true}
-            onAccept={(value, mask) => {
-              setValues(prev => { return { ...prev, phone: mask._value } })
+            unmask={false}
+            onAccept={(value) => {
+              setValues(prev => { return { ...prev, phone: value } })
             }}
           />
           <label className={activeLabel ? 'active' : ''} htmlFor="phone">Phone</label>

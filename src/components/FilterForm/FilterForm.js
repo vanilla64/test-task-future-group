@@ -19,41 +19,47 @@ function FilterForm(props) {
 
   const handleChange = (evt) => {
     const { name, value } = evt.target;
-    setValues((prev) => { return {...prev, [name]: value} })
+    setValues((prev) => { return { ...prev, [name]: value } })
   }
 
   const handleSubmit = (evt) => {
     evt.preventDefault()
 
-    const keys = Object.keys(values)
+    let filteredKeys = {}
+
+    const keys = Object.keys(values) // создаем массив ключей из стейта
+
+    keys.forEach(key => { // удаляем пустые свойства
+      if (values[key] !== '') {
+        filteredKeys[key] = values[key]
+      } else { return }
+    })
+
+    const keysForSearch = Object.keys(filteredKeys)
+
     let filteredData = []
 
-    keys.forEach(key => {
-      // let arr = data.filter(item => item[key].toString().toLowerCase() === values[key].toLowerCase())
+    keysForSearch.forEach(key => {
       let arr =
         data.filter(
-          item => item[key].toString().toLowerCase().includes(values[key].toLowerCase()) && item[key] !== ''
+          item => item[key].toString().toLowerCase().includes(values[key].toLowerCase())
         )
-
-      console.log(arr)
 
       arr.forEach(i => filteredData.push(i))
     })
 
     if (filteredData.length === 0) {
       return M.toast({ html: 'User not found' })
+    } else {
+      const reduceData = filteredData.reduce((result, item) => {
+        return result.includes(item) ? result : [...result, item] // удаляем повторяющиеся объекты
+      }, [])
+
+      setDataForRender(reduceData)
     }
-
-    const reduceData = filteredData.reduce((result, item) => {
-      return result.includes(item) ? result : [...result, item]
-    }, [])
-
-    setDataForRender(reduceData)
-    // setValues({})
   }
 
   const handleReset = () => {
-    // onReset()
     setDataForRender(data.slice(0, 50))
     setValues({})
   }

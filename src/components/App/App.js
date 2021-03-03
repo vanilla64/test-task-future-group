@@ -15,14 +15,12 @@ function App() {
   const [isPreloaderVisible, setIsPreloaderVisible] = useState(false);
   const [isUserInfoOpen, setIsUserInfoOpen] = useState(false);
   const [isFormAddUserVisible, setIsFormAddUserVisible] = useState(false);
-  const [isIncreaseData, setIsIncreaseData] = useState(false);
 
   const resetBeforeFetch = () => {
     setUsers([])
     setUsersToRender([])
     setIsUserInfoOpen(false)
     setIsPreloaderVisible(true)
-    setIsIncreaseData(false)
   }
 
   const handleGetMinData = () => {
@@ -71,27 +69,6 @@ function App() {
     setUserInfo(user)
   }
 
-  const dataSorting = (data) => {
-    let dataSort
-
-    if (isIncreaseData) {
-      dataSort = data.map(item => { return item }).reverse()
-      setUsersToRender(dataSort)
-      setIsIncreaseData(false)
-      return;
-    }
-
-    dataSort =
-      data.sort((a, b) => {
-        if (a.id > b.id) { return 1 }
-        if (a.id < b.id) { return -1 }
-        return 0
-      }).map(item => { return item })
-
-    setUsersToRender(dataSort)
-    setIsIncreaseData(true)
-  }
-
   return (
     <div className="App">
       <div className="container">
@@ -118,8 +95,6 @@ function App() {
               data={users} />
             <Table
               setUsersToRender={setUsersToRender}
-              isIncrease={isIncreaseData}
-              onSorting={dataSorting}
               handleRowClick={handleRowClick}
               usersToRender={usersToRender}
               data={users}/>
