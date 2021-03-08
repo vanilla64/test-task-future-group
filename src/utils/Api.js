@@ -16,9 +16,10 @@ class Api {
   getMinData = () => {
     return fetch(this._minFetch, {
       method: 'GET',
+      mode: 'cors',
       headers: {
         'Content-Type': 'application/json',
-        "Access-Control-Allow-Origin": 'http://www.filltext.com'
+        "Access-Control-Allow-Origin": '*'
       }
     })
       .then(res => this._initialRequest(res))
